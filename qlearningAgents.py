@@ -202,9 +202,20 @@ class ApproximateQAgent(PacmanQAgent):
            Should update your weights based on transition
         """
         "*** YOUR CODE HERE ***"
+        values_to_be_added = []
         for i in self.featExtractor.getFeatures(state, action):
           a = (self.discount * self.getValue(nextState) + reward) - self.getQValue(state, action)
-          self.weights[i] += self.alpha * self.featExtractor.getFeatures(state, action)[i] * a
+          val = self.weights[i] + self.alpha * self.featExtractor.getFeatures(state, action)[i] * a
+          values_to_be_added.append((i, val))
+          # self.weights[i] += self.alpha * self.featExtractor.getFeatures(state, action)[i] * a
+        for i, val in values_to_be_added:
+          self.weights[i] = val
+        # print(self.getValue(nextState), self.getQValue(state, action))
+        # print(nextState)
+        # print(self.alpha, a)
+        # print(self.discount, reward)
+        # print("weights: ", self.weights)
+        # print("features: ", self.featExtractor.getFeatures(state, action))
 
     def final(self, state):
         """Called at the end of each game."""
@@ -215,6 +226,6 @@ class ApproximateQAgent(PacmanQAgent):
         if self.episodesSoFar == self.numTraining:
             # you might want to print your weights here for debugging
             "*** YOUR CODE HERE ***"
-            print(self.alpha + " " + self.gamma + " " + self.epsilon + " " + self.numTraining)
+            print(self.alpha, " ", self.gamma, " ", self.epsilon, " ", self.numTraining)
 
             pass
